@@ -5,7 +5,13 @@
 package JavaDatabase;
 
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +22,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -68,11 +75,12 @@ public class MainFrame extends javax.swing.JFrame {
         lblNim = new javax.swing.JLabel();
         txtNama = new javax.swing.JTextField();
         txtNim = new javax.swing.JTextField();
-        btnSubmit = new javax.swing.JButton();
+        btnTambah = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMahasiswa = new javax.swing.JTable();
+        btnUpload = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,10 +90,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         lblNim.setText("Masukkan Nim");
 
-        btnSubmit.setText("Submit");
-        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+        btnTambah.setText("Tambah");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitActionPerformed(evt);
+                btnTambahActionPerformed(evt);
             }
         });
 
@@ -116,32 +124,38 @@ public class MainFrame extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblMahasiswa);
 
+        btnUpload.setText("Upload");
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnUpload)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnTambah)
+                        .addGap(18, 18, 18)
                         .addComponent(btnEdit)
-                        .addGap(37, 37, 37)
+                        .addGap(18, 18, 18)
                         .addComponent(btnHapus))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSubmit))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblNim, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNama)
-                                    .addComponent(txtNim))))))
+                            .addComponent(lblNim, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNama)
+                            .addComponent(txtNim))))
                 .addGap(49, 49, 49))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -161,12 +175,12 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNim)
                     .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addComponent(btnSubmit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnHapus)
-                    .addComponent(btnEdit))
+                    .addComponent(btnEdit)
+                    .addComponent(btnTambah)
+                    .addComponent(btnUpload))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(41, Short.MAX_VALUE))
@@ -175,11 +189,11 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
         String nim = txtNim.getText().trim();
         String nama = txtNama.getText().trim();
-        int angkatan = 2025;
+        int angkatan = 2024;
 
         if (nim.isEmpty() || nama.isEmpty()) {
             JOptionPane.showMessageDialog(this, "NIM dan Nama harus diisi!");
@@ -211,7 +225,7 @@ public class MainFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
             }
 
-            // tampilkan ke tabel GUI
+            // tampilkan ke tabel GUI 
             Object[] dataBaru = {nama, nim, angkatan};
             modelMahasiswa.addRow(dataBaru);
 
@@ -232,8 +246,8 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        } //GEN-LAST:event_btnSubmitActionPerformed
-    }//GEN-LAST:event_btnSubmitActionPerformed
+        }                                          
+    }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
@@ -294,7 +308,7 @@ public class MainFrame extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-    }//GEN-LAST:event_btnEditActionPerformed
+    }                                       
 
     private void insert() {
 
@@ -392,6 +406,79 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        // TODO add your handling code here:
+        // Pilih file CSV dari komputer
+        JFileChooser chooser = new JFileChooser();
+        int result = chooser.showOpenDialog(this);
+
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = chooser.getSelectedFile();
+
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(koneksi, user, password);
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            // Lewati header CSV
+            //br.readLine();
+
+            int sukses = 0;
+            int gagal = 0;
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] data = line.split(",");
+
+                if (data.length < 3) {
+                    gagal++;
+                    continue;
+                }
+
+                String nim = data[0].trim();
+                String nama = data[1].trim();
+                int tahun = Integer.parseInt(data[2].trim());
+
+                try {
+                    String sql = "INSERT INTO public.\"Mahasiswa\" (\"nim\", \"nama\", \"tahunmasuk\") VALUES (?, ?, ?)";
+
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, nim);
+                    pstmt.setString(2, nama);
+                    pstmt.setInt(3, tahun);
+                    pstmt.executeUpdate();
+
+                    // Masukkan ke tabel GUI
+                    Object[] row = {nama, nim, tahun};
+                    modelMahasiswa.addRow(row);
+
+                    sukses++;
+                } catch (SQLException ex) {
+                    gagal++;
+                }
+            }
+
+            br.close();
+
+            JOptionPane.showMessageDialog(this,
+                    "Upload selesai!\nSukses: " + sukses + "\nGagal: " + gagal);
+            loadData();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            e.printStackTrace();
+        
+        }
+    }//GEN-LAST:event_btnUploadActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -430,7 +517,8 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
-    private javax.swing.JButton btnSubmit;
+    private javax.swing.JButton btnTambah;
+    private javax.swing.JButton btnUpload;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMahasiswa;
